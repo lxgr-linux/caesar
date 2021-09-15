@@ -1,3 +1,6 @@
+// A small program to de/en-crypt with the caesar procedure.
+// by lxgr <lxgr@protonmail.com>
+
 use std::io;
 use std::io::Write;
 
@@ -108,9 +111,9 @@ fn main(){
 
     let mut key_list = vec!();
     for text in ["first", "second"].iter(){
+        // Gets keys
         key_list.push(
             loop{
-                // Gets key
                 let s = read_from_input(&format!("Enter {} key:", text));
                 match s.trim().parse::<i32>(){
                     Ok(s) => break s,
