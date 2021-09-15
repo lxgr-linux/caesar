@@ -18,7 +18,7 @@ fn all_in_abc(kt:&str) -> bool{
     true
 }
 
-fn encrypt(x:i32, s:i32, t:i32) -> i32{
+fn get_modulo(x:i32, s:i32, t:i32) -> i32{
     // Encrypts a number
     ((x*s)+t) % 26
 }
@@ -45,6 +45,28 @@ fn nums_to_string(nums:Vec<i32>) -> String{
         s.push(abc[*num as usize]);
     }
     s
+}
+
+fn encrypt(nums:&Vec<i32>, s:i32, t:i32) -> Vec<i32>{
+    let mut gt_nums = vec!();
+    for num in nums.iter(){
+        gt_nums.push(get_modulo(*num, s, t));
+    }
+    gt_nums
+}
+
+fn decrypt(nums:&Vec<i32>, s:i32, t:i32) -> Vec<i32>{
+    let mut kt_nums = vec!();
+    let mut ntn = vec!();
+    for num in 0..26{
+        ntn.push(get_modulo(num, s, t));
+    }
+    for num in nums{
+        kt_nums.push(ntn.iter()
+                     .position(|&r| r == *num)
+                     .unwrap() as i32);
+    }
+    kt_nums
 }
 
 fn main(){
@@ -76,11 +98,9 @@ fn main(){
     };
 
     let t = 7;
-    let mut gt_nums = vec!();
+    let new_nums:Vec<i32>;
 
     let nums = string_to_nums(&kt);
-    for num in nums.iter(){
-        gt_nums.push(caesar(*num, s, t));
-    }
-    println!("{}", nums_to_string(gt_nums));
+    new_nums = decrypt(&nums, s, t);
+    println!("{}", nums_to_string(new_nums));
 }
