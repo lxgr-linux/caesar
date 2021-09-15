@@ -106,16 +106,22 @@ fn main(){
         break kt
     };
 
-    let s = loop{
-        // Gets key
-        let s = read_from_input("Enter key:");
-        match s.trim().parse::<i32>(){
-            Ok(s) => break s,
-            Err(_) => continue,
-        };
-    };
+    let mut key_list = vec!();
+    for text in ["first", "second"].iter(){
+        key_list.push(
+            loop{
+                // Gets key
+                let s = read_from_input(&format!("Enter {} key:", text));
+                match s.trim().parse::<i32>(){
+                    Ok(s) => break s,
+                    Err(_) => continue,
+                };
+            }
+        );
+    }
 
-    let t = 7;
+    let s = key_list[0];
+    let t = key_list[1];
     let new_nums:Vec<i32>;
 
     let nums = string_to_nums(&kt);
