@@ -69,7 +69,27 @@ fn decrypt(nums:&Vec<i32>, s:i32, t:i32) -> Vec<i32>{
     kt_nums
 }
 
+
+enum Crypt{
+    En,
+    De,
+}
+
+
 fn main(){
+    let en:Crypt = loop{
+        let mut en = String::new();
+        print!("[E]ncrypt or [D]ecrypt? ");
+        io::stdout().flush().unwrap();
+        io::stdin().read_line(&mut en).unwrap();
+        let ret = match &en.trim().to_ascii_lowercase()[..]{
+            "e" => Crypt::En,
+            "d" => Crypt::De,
+            _ => continue,
+        };
+        break ret
+    };
+
     let kt = loop{
         // Gets text input, that should be decrypted 
         let mut kt = String::new();
@@ -101,6 +121,9 @@ fn main(){
     let new_nums:Vec<i32>;
 
     let nums = string_to_nums(&kt);
-    new_nums = decrypt(&nums, s, t);
+    new_nums = match en{
+            Crypt::De => decrypt(&nums, s, t),
+            Crypt::En => encrypt(&nums, s, t)
+    };
     println!("{}", nums_to_string(new_nums));
 }
