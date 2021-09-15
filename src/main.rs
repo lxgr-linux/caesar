@@ -69,19 +69,24 @@ fn decrypt(nums:&Vec<i32>, s:i32, t:i32) -> Vec<i32>{
     kt_nums
 }
 
-
 enum Crypt{
+    // Crypt enum
     En,
     De,
 }
 
+fn read_from_input(text:&str) -> String{
+    let mut inp = String::new();
+    print!("{} ", text);
+    io::stdout().flush().unwrap();
+    io::stdin().read_line(&mut inp).unwrap();
+    inp
+}
 
 fn main(){
     let en:Crypt = loop{
-        let mut en = String::new();
-        print!("[E]ncrypt or [D]ecrypt? ");
-        io::stdout().flush().unwrap();
-        io::stdin().read_line(&mut en).unwrap();
+        // Gets information about process
+        let en = read_from_input("[E]ncrypt or [D]ecrypt?");
         let ret = match &en.trim().to_ascii_lowercase()[..]{
             "e" => Crypt::En,
             "d" => Crypt::De,
@@ -92,13 +97,9 @@ fn main(){
 
     let kt = loop{
         // Gets text input, that should be decrypted 
-        let mut kt = String::new();
-        print!("Enter text: ");
-        io::stdout().flush().unwrap();
-        io::stdin().read_line(&mut kt).unwrap();
-        kt = String::from(kt.trim()
-                            .replace(" ", "")
-                            .to_ascii_lowercase());
+        let kt = read_from_input("Enter text:").trim()
+                                               .replace(" ", "")
+                                               .to_ascii_lowercase();
         if !all_in_abc(&kt){
             continue;
         }
@@ -107,10 +108,7 @@ fn main(){
 
     let s = loop{
         // Gets key
-        let mut s = String::new();
-        print!("Enter key: ");
-        io::stdout().flush().unwrap();
-        io::stdin().read_line(&mut s).unwrap();
+        let s = read_from_input("Enter key:");
         match s.trim().parse::<i32>(){
             Ok(s) => break s,
             Err(_) => continue,
