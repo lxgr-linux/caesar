@@ -168,7 +168,7 @@ fn main(){
         for i in 0..2 {
             key_list.push(args[i+2].trim()
                                    .parse::<u32>()
-                                   .expect("Keys have to be integers!")
+                                   .expect("Keys have to be unsigned integers!")
             );
         }
     }
