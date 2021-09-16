@@ -16,7 +16,7 @@ Note: Just ascii characters and spaces are allowed in the text!
 
 ## Example
 
-This encrypts the text "Hello world" wi the key (3, 7):
+This encrypts the text "Hello world" with the key (3, 7):
 ```shell
  $ cargo run encrypt 3 7 "Hello world"
 ```
