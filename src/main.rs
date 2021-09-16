@@ -1,4 +1,15 @@
 // A small program to de/en-crypt with the caesar procedure.
+//
+// Usage:
+//  - For interactive use: 
+// ```shell
+//  $ cargo run
+// ```
+//
+//  - For noninteractive use: 
+// ```shell
+//  $ cargo run <encrypt/decrypt> <key1> <key2> <text>
+// ```
 // by lxgr <lxgr@protonmail.com>
 
 use std::io;
