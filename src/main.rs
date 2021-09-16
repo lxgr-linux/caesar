@@ -3,6 +3,7 @@
 
 use std::io;
 use std::io::Write;
+use std::env;
 
 fn abc() -> Vec<char>{
     // Returns the an alphabetic list
@@ -87,42 +88,77 @@ fn read_from_input(text:&str) -> String{
 }
 
 fn main(){
-    let en:Crypt = loop{
-        // Gets information about process
-        let en = read_from_input("[E]ncrypt or [D]ecrypt?");
-        let ret = match &en.trim().to_ascii_lowercase()[..]{
-            "e" => Crypt::En,
-            "d" => Crypt::De,
-            _ => continue,
-        };
-        break ret
+    let args:Vec<String> = env::args().collect();
+    if args.len() != 5 && args.len() != 1 {
+        panic!("Error: This program needs to have 4 or 0 arguments, not {}!",
+               args.len()-1);
+    }
+
+    let en:Crypt = {
+        if args.len() == 1 {
+            loop{
+                // Gets information about process
+                let en = read_from_input("[E]ncrypt or [D]ecrypt?");
+                let ret = match &en.trim().to_ascii_lowercase()[..]{
+                    "e" => Crypt::En,
+                    "d" => Crypt::De,
+                    _ => continue,
+                };
+                break ret
+            }
+        } else {
+            let ret = match &args[1].trim().to_ascii_lowercase()[..]{
+                "encrypt" => Crypt::En,
+                "decrypt" => Crypt::De,
+                _ => panic!("Invalid en/decryption operator")
+            };
+            ret
+        }
     };
 
-    let kt = loop{
-        // Gets text input, that should be decrypted 
-        let kt = read_from_input("Enter text:").trim()
+    let kt = {
+        if args.len() == 1 {
+            loop{
+                // Gets text input, that should be decrypted 
+                let kt = read_from_input("Enter text:").trim()
                                                .replace(" ", "")
                                                .to_ascii_lowercase();
-        if !all_in_abc(&kt){
-            continue;
+                if !all_in_abc(&kt){
+                continue;
+                }
+                break kt
+            }
+        } else {
+            let kt = args[4].replace(" ", "").to_ascii_lowercase();
+            if !all_in_abc(&kt){
+                panic!("The text is only allowed to contain characters and spaces")
+            }
+            kt
         }
-        break kt
     };
 
     let mut key_list = vec!();
-    for text in ["first", "second"].iter(){
-        // Gets keys
-        key_list.push(
-            loop{
-                let s = read_from_input(&format!("Enter {} key:", text));
-                match s.trim().parse::<i32>(){
-                    Ok(s) => break s,
-                    Err(_) => continue,
-                };
-            }
-        );
+    if args.len() == 1 {
+        for text in ["first", "second"].iter(){
+            // Gets keys
+            key_list.push(
+                loop{
+                    let s = read_from_input(&format!("Enter {} key:", text));
+                    match s.trim().parse::<i32>(){
+                        Ok(s) => break s,
+                        Err(_) => continue,
+                    };
+                }
+            );
+        }   
+    } else {
+        for i in 0..2 {
+            key_list.push(args[i+2].trim()
+                                   .parse::<i32>()
+                                   .expect("Keys have to be integers!")
+            );
+        }
     }
-
     let s = key_list[0];
     let t = key_list[1];
     let new_nums:Vec<i32>;
