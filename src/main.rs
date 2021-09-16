@@ -16,6 +16,13 @@ use std::io;
 use std::io::Write;
 use std::env;
 
+
+enum Crypt{
+    // Crypt enum
+    En,
+    De,
+}
+
 fn abc() -> Vec<char>{
     // Returns the an alphabetic list
     String::from("abcdefghijklmnopqrstuvwxyz")
@@ -33,26 +40,26 @@ fn all_in_abc(kt:&str) -> bool{
     true
 }
 
-fn get_modulo(x:i32, s:i32, t:i32) -> i32{
+fn get_modulo(x:u32, s:u32, t:u32) -> u32{
     // Encrypts a number
-    ((x*s)+t) % 26
+    (x*s+t) % 26
 }
 
-fn string_to_nums(s:&str) -> Vec<i32>{
-    // Converts a String to a Vec<i32>
+fn string_to_nums(s:&str) -> Vec<u32>{
+    // Converts a String to a Vec<u32>
     let mut list = vec!();
     let abc:Vec<char> = abc();
     
     for cha in s.chars(){
         list.push(abc.iter()
                   .position(|&r| cha == r)
-                  .unwrap() as i32);
+                  .unwrap() as u32);
     }
     list
 }
 
-fn nums_to_string(nums:Vec<i32>) -> String{
-    // Converts a Vec<i32> to a String
+fn nums_to_string(nums:Vec<u32>) -> String{
+    // Converts a Vec<u32> to a String
     let mut s = String::new();
     let abc:Vec<char> = abc();
     
@@ -62,7 +69,7 @@ fn nums_to_string(nums:Vec<i32>) -> String{
     s
 }
 
-fn encrypt(nums:&Vec<i32>, s:i32, t:i32) -> Vec<i32>{
+fn encrypt(nums:&Vec<u32>, s:u32, t:u32) -> Vec<u32>{
     let mut gt_nums = vec!();
     for num in nums.iter(){
         gt_nums.push(get_modulo(*num, s, t));
@@ -70,7 +77,7 @@ fn encrypt(nums:&Vec<i32>, s:i32, t:i32) -> Vec<i32>{
     gt_nums
 }
 
-fn decrypt(nums:&Vec<i32>, s:i32, t:i32) -> Vec<i32>{
+fn decrypt(nums:&Vec<u32>, s:u32, t:u32) -> Vec<u32>{
     let mut kt_nums = vec!();
     let mut ntn = vec!();
     for num in 0..26{
@@ -79,18 +86,13 @@ fn decrypt(nums:&Vec<i32>, s:i32, t:i32) -> Vec<i32>{
     for num in nums{
         kt_nums.push(ntn.iter()
                      .position(|&r| r == *num)
-                     .unwrap() as i32);
+                     .unwrap() as u32);
     }
     kt_nums
 }
 
-enum Crypt{
-    // Crypt enum
-    En,
-    De,
-}
-
 fn read_from_input(text:&str) -> String{
+    // Prompts the user to input a String
     let mut inp = String::new();
     print!("{} ", text);
     io::stdout().flush().unwrap();
@@ -155,7 +157,7 @@ fn main(){
             key_list.push(
                 loop{
                     let s = read_from_input(&format!("Enter {} key:", text));
-                    match s.trim().parse::<i32>(){
+                    match s.trim().parse::<u32>(){
                         Ok(s) => break s,
                         Err(_) => continue,
                     };
@@ -165,14 +167,15 @@ fn main(){
     } else {
         for i in 0..2 {
             key_list.push(args[i+2].trim()
-                                   .parse::<i32>()
+                                   .parse::<u32>()
                                    .expect("Keys have to be integers!")
             );
         }
     }
+
     let s = key_list[0];
     let t = key_list[1];
-    let new_nums:Vec<i32>;
+    let new_nums:Vec<u32>;
 
     let nums = string_to_nums(&kt);
     new_nums = match en{
