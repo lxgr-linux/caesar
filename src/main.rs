@@ -97,7 +97,7 @@ fn read_from_input(text:&str) -> String{
     print!("{} ", text);
     io::stdout().flush().unwrap();
     io::stdin().read_line(&mut inp).unwrap();
-    inp
+    String::from(inp.trim())
 }
 
 fn main(){
@@ -111,21 +111,19 @@ fn main(){
         if args.len() == 1 {
             loop{
                 // Gets information about process
-                let en = read_from_input("[E]ncrypt or [D]ecrypt?");
-                let ret = match &en.trim().to_ascii_lowercase()[..]{
+                break match &read_from_input("[E]ncrypt or [D]ecrypt?")
+                                            .to_ascii_lowercase()[..]{
                     "e" => Crypt::En,
                     "d" => Crypt::De,
                     _ => continue,
                 };
-                break ret
             }
         } else {
-            let ret = match &args[1].trim().to_ascii_lowercase()[..]{
+            match &args[1].trim().to_ascii_lowercase()[..]{
                 "encrypt" => Crypt::En,
                 "decrypt" => Crypt::De,
                 _ => panic!("Invalid en/decryption operator")
-            };
-            ret
+            }
         }
     };
 
@@ -133,7 +131,7 @@ fn main(){
         if args.len() == 1 {
             loop{
                 // Gets text input, that should be decrypted 
-                let kt = read_from_input("Enter text:").trim()
+                let kt = read_from_input("Enter text:")
                                                .replace(" ", "")
                                                .to_ascii_lowercase();
                 if !all_in_abc(&kt){
@@ -156,9 +154,9 @@ fn main(){
             // Gets keys
             key_list.push(
                 loop{
-                    let s = read_from_input(&format!("Enter {} key:", text));
-                    match s.trim().parse::<u32>(){
-                        Ok(s) => break s,
+                    match read_from_input(&format!("Enter {} key:", text))
+                                        .parse::<u32>(){
+                        Ok(key) => break key,
                         Err(_) => continue,
                     };
                 }
