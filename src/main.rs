@@ -10,6 +10,9 @@
 // ```shell
 //  $ cargo run <encrypt/decrypt> <key1> <key2> <text>
 // ```
+//
+// key1 is not allowed to be divisible by 2 or 13
+//
 // by lxgr <lxgr@protonmail.com>
 
 use std::io;
@@ -154,19 +157,34 @@ fn main(){
             // Gets keys
             key_list.push(
                 loop{
-                    match read_from_input(&format!("Enter {} key:", text))
+                    let key = match read_from_input(&format!("Enter {} key:", text))
                                         .parse::<u32>(){
-                        Ok(key) => break key,
+                        Ok(key) => key,
                         Err(_) => continue,
+                    };
+                    break {
+                        // Checks if the first key is divisible by 2 or 13
+                        if *text == "first" && (key % 2 == 0 || key % 13 == 0){
+                            continue
+                        } else {
+                            key
+                        }
                     };
                 }
             );
         }   
     } else {
         for i in 0..2 {
-            key_list.push(args[i+2].trim()
-                                   .parse::<u32>()
-                                   .expect("Keys have to be unsigned integers!")
+            let key = args[i+2].trim()
+                               .parse::<u32>()
+                               .expect("Keys have to be unsigned integers!");
+            key_list.push(
+                // Checks if the first key is divisible by 2 or 13
+                if i == 0 && (key % 2 == 0 || key % 13 == 0) {
+                    panic!("The first key is not allowed to be divisible by 2 or 13");
+                } else {
+                    key
+                }
             );
         }
     }

@@ -12,6 +12,8 @@ A small program to de/en-crypt with the caesar procedure.
  $ cargo run <encrypt/decrypt> <key1> <key2> <text>
 ```
 
+Note: key1 is not allowed to be dividible by 2 or 13
+
 Note: Just ascii characters and spaces are allowed in the text!
 
 ## Example
