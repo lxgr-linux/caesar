@@ -44,8 +44,9 @@ fn decrypt(nums:&Vec<u32>, s:u32, t:u32) -> Vec<u32>{
 fn main(){
     let args:Vec<String> = env::args().collect();
     if args.len() != 5 && args.len() != 1 {
-        panic!("Error: This program needs to have 4 or 0 arguments, not {}!",
+        eprintln!("Error: This program needs to have 4 or 0 arguments, not {}!",
                args.len()-1);
+        std::process::exit(1);
     }
 
     let en:Crypt = {
@@ -63,7 +64,10 @@ fn main(){
             match &args[1].trim().to_ascii_lowercase()[..]{
                 "encrypt" => Crypt::En,
                 "decrypt" => Crypt::De,
-                _ => panic!("Invalid en/decryption operator")
+                _ => {
+                        eprintln!("Error: Invalid en/decryption operator");
+                        std::process::exit(1);
+                }
             }
         }
     };
@@ -83,7 +87,8 @@ fn main(){
         } else {
             let kt = args[4].replace(" ", "").to_ascii_lowercase();
             if !all_in_abc(&kt){
-                panic!("The text is only allowed to contain characters and spaces")
+                eprintln!("Error: The text is only allowed to contain characters and spaces");
+                std::process::exit(1);
             }
             kt
         }
@@ -119,7 +124,8 @@ fn main(){
             key_list.push(
                 // Checks if the first key is divisible by 2 or 13
                 if i == 0 && (key % 2 == 0 || key % 13 == 0) {
-                    panic!("The first key is not allowed to be divisible by 2 or 13");
+                    eprintln!("Error: The first key is not allowed to be divisible by 2 or 13");
+                    std::process::exit(1); 
                 } else {
                     key
                 }
